@@ -1,0 +1,18 @@
+[workspace]
+members = [
+    "mongo_connect",
+    "binance_connection", 
+    "bybit_connnection", 
+    "gate_connection", 
+    "kraken_connection", 
+    "falconx_connection", 
+    "FireBlocks/avax_node", 
+    "FireBlocks/cosmos_node", 
+    "FireBlocks/eth_node",  
+    "FireBlocks/harmony_node", 
+    "FireBlocks/lpt_node", 
+    "FireBlocks/near_node", 
+    "FireBlocks/cartesi_node", 
+    "FireBlocks/polkadot_node", 
+    "FireBlocks/generic_node",
+    ]

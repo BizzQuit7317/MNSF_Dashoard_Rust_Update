@@ -1,0 +1,15 @@
+[package]
+name = "avax_node"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+mongo_connect = { path = "../../mongo_connect" }
+mongodb = "3.2.4"
+tokio = { version = "1.46.1", features = ["full"] }
+reqwest = { version = "0.11", features = ["json"] }
+serde = { version = "1.0", features = ["derive"]}
+serde_json = "1.0"
+hex = "0.4.3"
+sha2 = "0.10.9"
+bs58 = "0.5.1"
