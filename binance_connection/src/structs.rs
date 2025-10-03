@@ -83,7 +83,7 @@ impl BinanceClient {
         */
 
         let response = self.send_request::<Value>(base_endpoint, endpoint, method, body_data).await;
-        let response_data = self.value_to_documents(response);
+        let response_data = self.value_to_documents(response.unwrap());
 
         let ts = chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f").to_string();
 
@@ -94,6 +94,7 @@ impl BinanceClient {
     }
 
 }
+
 
 
 
