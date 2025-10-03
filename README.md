@@ -12,3 +12,7 @@ Same as the MNSF_Dashboard repo but backend code updated in rust and updated app
 - Update calcuulation and alert scripts - Pending
 - Update PHP to display data - Pending
 - Update server to run update - Pending
+
+# Data Flow
+- Read from exchange, saving raw calls to DB
+- Sanatise and format exchange data from DB
