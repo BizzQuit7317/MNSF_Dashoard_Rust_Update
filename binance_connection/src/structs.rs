@@ -71,6 +71,12 @@ impl BinanceClient {
 
     }
 
+    pub fn value_to_documents(&self, value: Value) /*-> Vec<Document>*/ {
+        for i in value {
+            println!("{:?}", i);
+        }
+    }
+
     pub async fn polling(&mut self, base_endpoint: &str, endpoint: &str, method: Method, body_data: Option<Value>, mongo_client:&mut  ClientStruct, table_name: &str) {
         /*
             Needs to call data and push it into a db
@@ -87,5 +93,6 @@ impl BinanceClient {
     }
 
 }
+
 
 
