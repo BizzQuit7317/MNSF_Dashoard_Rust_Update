@@ -71,10 +71,22 @@ impl BinanceClient {
 
     }
 
-    pub fn value_to_documents(&self, value: Value) /*-> Vec<Document>*/ {
-        for i in value {
-            println!("{:?}", i);
+    pub fn value_to_documents(&self, value: Value) -> Vec<Document> {
+        let result = vec![doc! {"test":"test"}, doc! {"test":"test"}];
+
+        match value {
+            Value::Array(arr) => {
+                for obj in arr {
+                    //Somehow need to convert Value into dog shit Bson
+                }
+            },
+            Value::Object(_) => {
+                println!("[DBG] single object");
+            },
+            _ => println!("[ERR] Data not in correct format!"),
         }
+
+        result
     }
 
     pub async fn polling(&mut self, base_endpoint: &str, endpoint: &str, method: Method, body_data: Option<Value>, mongo_client:&mut  ClientStruct, table_name: &str) {
@@ -94,6 +106,7 @@ impl BinanceClient {
     }
 
 }
+
 
 
 
