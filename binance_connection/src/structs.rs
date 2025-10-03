@@ -71,13 +71,18 @@ impl BinanceClient {
 
     }
 
-    pub async fn polling(&mut self, base_endpoint: &str, endpoint: &str, method: Method, body_data: Option<Value>) {
+    pub async fn polling(&mut self, base_endpoint: &str, endpoint: &str, method: Method, body_data: Option<Value>, mongo_client:&mut  ClientStruct, table_name: &str) {
         /*
             Needs to call data and push it into a db
         */
 
         let response = self.send_request::<Value>(base_endpoint, endpoint, method, body_data).await;
-        println!("{:?}", response);
+
+        let _ = &mut  mongo_client.select_collection(String::from("test")).await;
+        let _ = &mut  mongo_client.push_document_collection(doc! {"Test number": "1", "Time": chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f"), "Call Name": table_name}).await;
+        
+
     }
 
 }
+
