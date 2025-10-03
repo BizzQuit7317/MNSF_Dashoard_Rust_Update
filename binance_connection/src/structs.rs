@@ -70,4 +70,14 @@ impl BinanceClient {
         Ok(response)       
 
     }
+
+    pub async fn polling(&mut self, base_endpoint: &str, endpoint: &str, method: Method, body_data: Option<Value>) {
+        /*
+            Needs to call data and push it into a db
+        */
+
+        let response = self.send_request::<Value>(base_endpoint, endpoint, method, body_data).await;
+        println!("{:?}", response);
+    }
+
 }
