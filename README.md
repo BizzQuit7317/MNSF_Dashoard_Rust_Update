@@ -16,3 +16,5 @@ Same as the MNSF_Dashboard repo but backend code updated in rust and updated app
 # Data Flow
 - Read from exchange, saving raw calls to DB
 - Sanatise and format exchange data from DB
+- Each exchange struct should run endpoint call asynchronously (ensure request limits to not overload the server)
+- Use systemd to running the polling scripts for each exchange
