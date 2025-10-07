@@ -7,6 +7,9 @@ use serde_json::{json, Value};
 use url::form_urlencoded;
 use std::collections::HashMap;
 use serde::Deserialize;
+use mongo_connect::ClientStruct;
+use mongodb::bson::{self, doc, Document};
+use chrono;
 
 pub struct BinanceClient {
     pub API_KEY:String,
@@ -86,6 +89,7 @@ impl BinanceClient {
     }
 
 }
+
 
 
 
