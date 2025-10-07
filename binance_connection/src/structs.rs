@@ -71,52 +71,22 @@ impl BinanceClient {
 
     }
 
-    pub fn value_to_documents(&self, value: Value) -> Vec<Document> {
-        let mut final_result: Vec<Document> = Vec::new();
-        let ts = chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f").to_string();
-
-        match value {
-            Value::Array(arr) => {
-                for obj in arr {
-                    let bson_value = bson::to_bson(&obj);
-                    match bson_value {
-                        Ok(bson_doc) => {
-                            match bson_doc.as_document() {
-                                Some(doc) => {
-                                    let mut no_ref_doc = doc.clone();
-                                    no_ref_doc.insert("Stored_DateTime", &ts);
-                                    final_result.push(no_ref_doc);
-                                },
-                                _ => println!("[DBG] Somethings happening"),
-                            }
-                        },
-                        Err(e) => println!("[ERR] No data to add {}", e),
-                    }
-                }
-            },
-            Value::Object(_) => println!("[DBG] single object"),
-            _ => println!("[ERR] Data not in correct format!"),
-        }
-        final_result
-    }
-
     pub async fn polling(&mut self, base_endpoint: &str, endpoint: &str, method: Method, body_data: Option<Value>, mongo_client:&mut  ClientStruct, table_name: &str) {
         /*
             Needs to call data and push it into a db
         */
 
         let response = self.send_request::<Value>(base_endpoint, endpoint, method, body_data).await;
-        let response_data = self.value_to_documents(response.unwrap());
+        let response_data = mongo_client.value_to_documents(response.unwrap());
 
-        let ts = chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f").to_string();
-
-        let _ = &mut  mongo_client.select_collection(String::from("test")).await;
+        let _ = &mut  mongo_client.select_collection(table_name).await;
         let _ = &mut  mongo_client.push_multi_document_collection(response_data).await;
         
 
     }
 
 }
+
 
 
 
