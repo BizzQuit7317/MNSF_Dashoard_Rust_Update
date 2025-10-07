@@ -5,6 +5,9 @@ use dotenv;
 use mongodb::{bson::{doc, Document}, Client, Database};
 use std::env;
 use futures_util::TryStreamExt;
+use chrono;
+use serde_json::{json, Value};
+use mongodb::bson;
 
 pub struct ClientStruct {
     pub URI:String,
@@ -113,5 +116,34 @@ impl ClientStruct {
             }
             None => println!("[WARN] No collection selected! Did you call select_collection()?"),
         }
+    }
+
+    pub fn value_to_documents(&self, value: Value) -> Vec<Document> {
+        let mut final_result: Vec<Document> = Vec::new();
+        let ts = chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f").to_string();
+
+        match value {
+            Value::Array(arr) => {
+                for obj in arr {
+                    let bson_value = bson::to_bson(&obj);
+                    match bson_value {
+                        Ok(bson_doc) => {
+                            match bson_doc.as_document() {
+                                Some(doc) => {
+                                    let mut no_ref_doc = doc.clone();
+                                    no_ref_doc.insert("Stored_DateTime", &ts);
+                                    final_result.push(no_ref_doc);
+                                },
+                                _ => println!("[DBG] Somethings happening"),
+                            }
+                        },
+                        Err(e) => println!("[ERR] No data to add {}", e),
+                    }
+                }
+            },
+            Value::Object(_) => println!("[DBG] single object"),
+            _ => println!("[ERR] Data not in correct format!"),
+        }
+        final_result
     }
 }
