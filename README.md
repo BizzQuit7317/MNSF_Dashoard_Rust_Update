@@ -1,6 +1,9 @@
 # MNSF_Dashoard_Rust_Update
 Same as the MNSF_Dashboard repo but backend code updated in rust and updated app structure
 
+# Important
+- If compiling code on a smaller machine like a ec2 t2.micro use the safe_compile.sh script to add a 4gb swap and limit compilation to 1 crate at a time, this will massivly increase compile time but stop the server from crashing
+
 # Changes
 - No longer 1 control script, each exchange independantly pushes raw data to DB
 - All raw data form exchanges are permiated in DB so we can always recover or repair
