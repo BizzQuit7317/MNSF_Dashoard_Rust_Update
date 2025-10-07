@@ -73,6 +73,7 @@ impl BinanceClient {
 
     pub fn value_to_documents(&self, value: Value) -> Vec<Document> {
         let mut final_result: Vec<Document> = Vec::new();
+        let ts = chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f").to_string();
 
         match value {
             Value::Array(arr) => {
@@ -82,7 +83,9 @@ impl BinanceClient {
                         Ok(bson_doc) => {
                             match bson_doc.as_document() {
                                 Some(doc) => {
-                                    final_result.push(doc.clone());
+                                    let mut no_ref_doc = doc.clone();
+                                    no_ref_doc.insert("Stored_DateTime", &ts);
+                                    final_result.push(no_ref_doc);
                                 },
                                 _ => println!("[DBG] Somethings happening"),
                             }
@@ -94,7 +97,6 @@ impl BinanceClient {
             Value::Object(_) => println!("[DBG] single object"),
             _ => println!("[ERR] Data not in correct format!"),
         }
-
         final_result
     }
 
@@ -115,6 +117,7 @@ impl BinanceClient {
     }
 
 }
+
 
 
 
