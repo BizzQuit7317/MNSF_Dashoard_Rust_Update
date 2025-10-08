@@ -4,6 +4,13 @@ Same as the MNSF_Dashboard repo but backend code updated in rust and updated app
 # Important
 - If compiling code on a smaller machine like a ec2 t2.micro use the safe_compile.sh script to add a 4gb swap and limit compilation to 1 crate at a time, this will massivly increase compile time but stop the server from crashing. Just add the safe_compile.sh script to the same dir as the Cargo.toml files and run it from there
 
+# Key security
+- gpg encrypted keys in json files
+- each key pair gets its own encrypted json
+- use a secret daemon file to intereact with gpg agent
+- each exchange with interact with the secret daemon via Unix domain socket
+- this way we only need to enter the secret passphrase not stored on the server to start the application
+
 # Changes
 - No longer 1 control script, each exchange independantly pushes raw data to DB
 - All raw data form exchanges are permiated in DB so we can always recover or repair
@@ -20,4 +27,4 @@ Same as the MNSF_Dashboard repo but backend code updated in rust and updated app
 - Read from exchange, saving raw calls to DB
 - Sanatise and format exchange data from DB
 - Each exchange struct should run endpoint call asynchronously (ensure request limits to not overload the server)
-- Use systemd to running the polling scripts for each exchange
+- Use systemd to run the polling scripts for each exchange (with restart when stopped)
