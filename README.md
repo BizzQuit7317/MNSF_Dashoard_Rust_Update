@@ -9,7 +9,7 @@ Same as the MNSF_Dashboard repo but backend code updated in rust and updated app
 - each key pair gets its own encrypted json
 - write a secret daemon process (some script to work as an inbetween)
 - each exchange with interact with the secret daemon via Unix domain socket
-- this way we only need to enter the secret passphrase not stored on the server to start the application
+- this way we only need to enter the secret passphrase, which not stored on the server to start the application
 
 # Changes
 - No longer 1 control script, each exchange independantly pushes raw data to DB
