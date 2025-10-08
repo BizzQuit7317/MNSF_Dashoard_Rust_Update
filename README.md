@@ -7,7 +7,7 @@ Same as the MNSF_Dashboard repo but backend code updated in rust and updated app
 # Key security
 - gpg encrypted keys in json files
 - each key pair gets its own encrypted json
-- use a secret daemon file to intereact with gpg agent
+- write a secret daemon process (some script to work as an inbetween)
 - each exchange with interact with the secret daemon via Unix domain socket
 - this way we only need to enter the secret passphrase not stored on the server to start the application
 
