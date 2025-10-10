@@ -24,7 +24,7 @@ impl PolkadotClient {
     pub fn new(address: String) -> PolkadotClient {
         PolkadotClient {
             ADDRESS: address,
-            BASE_URL: String::from("wss://kusama-rpc.polkadot.io")
+            BASE_URL: String::from("wss://kusama-asset-hub-rpc.polkadot.io")
         }
     }
 
@@ -162,4 +162,5 @@ impl PolkadotClient {
 
         total_balance
     }
+
 }
