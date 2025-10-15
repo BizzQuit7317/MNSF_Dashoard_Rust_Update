@@ -11,6 +11,13 @@ Same as the MNSF_Dashboard repo but backend code updated in rust and updated app
 - each exchange with interact with the secret daemon via Unix domain socket
 - this way we only need to enter the secret passphrase, which not stored on the server to start the application
 
+# How the secret daemon works
+- when started hould prompt user for key
+- shouuld decrypt gpg and keep data in memory
+- create unix domain socket and listener
+- when listener socket gets a reqest first authenticate caller, if auth true return keys
+- continue to loop on socket
+
 # Setting up keys
 - Create the plain text json file in this format
 ```
