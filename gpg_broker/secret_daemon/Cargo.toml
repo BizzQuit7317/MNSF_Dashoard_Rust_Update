@@ -1,1 +1,8 @@
-a
+[package]
+name = "secret_daemon"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+rpassword = "7.4.0"
+secrecy = "0.10.3"
