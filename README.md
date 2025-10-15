@@ -3,6 +3,7 @@ Same as the MNSF_Dashboard repo but backend code updated in rust and updated app
 
 # Important
 - If compiling code on a smaller machine like a ec2 t2.micro use the safe_compile.sh script to add a 4gb swap and limit compilation to 1 crate at a time, this will massivly increase compile time but stop the server from crashing. Just **add the safe_compile.sh script to the same dir as the Cargo.toml** files and run it from there
+- Make sure to **run safely compiled scripts from /target/release/**
 
 # Key security
 - gpg encrypted keys in json files
