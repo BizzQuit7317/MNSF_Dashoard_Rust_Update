@@ -31,6 +31,11 @@ Same as the MNSF_Dashboard repo but backend code updated in rust and updated app
     }
 ]
 ```
+- Then run
+```
+gpg --symmetric --cipher-algo AES256 -o <key>.json.gpg <key>.json
+shred -u <key>.json
+```
 
 # Changes
 - No longer 1 control script, each exchange independantly pushes raw data to DB
