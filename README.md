@@ -11,6 +11,27 @@ Same as the MNSF_Dashboard repo but backend code updated in rust and updated app
 - each exchange with interact with the secret daemon via Unix domain socket
 - this way we only need to enter the secret passphrase, which not stored on the server to start the application
 
+# Setting up keys
+- Create the plain text json file in this format
+```
+[
+    {
+        "id": "binance",
+        "key": "",
+        "secret": "",
+        "passs": "",
+        "account":"0"
+    },
+    {
+        "id": "binance",
+        "key": "",
+        "secret": "",
+        "passs": "",
+        "account":"1"
+    }
+]
+```
+
 # Changes
 - No longer 1 control script, each exchange independantly pushes raw data to DB
 - All raw data form exchanges are permiated in DB so we can always recover or repair
