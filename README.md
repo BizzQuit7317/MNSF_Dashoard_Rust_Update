@@ -19,14 +19,14 @@ Same as the MNSF_Dashboard repo but backend code updated in rust and updated app
         "id": "binance",
         "key": "",
         "secret": "",
-        "passs": "",
+        "pass": "",
         "account":"0"
     },
     {
         "id": "binance",
         "key": "",
         "secret": "",
-        "passs": "",
+        "pass": "",
         "account":"1"
     }
 ]
