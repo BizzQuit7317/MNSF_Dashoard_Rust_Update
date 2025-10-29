@@ -50,6 +50,12 @@ gpg --symmetric --cipher-algo AES256 -o <key>.json.gpg <key>.json
 shred -u <key>.json
 ```
 
+- If you need to check passwords or change anything you candecrypt the file manually with
+```
+gpg --output <key>.json --decrypt <key>.json.gpg
+
+```
+
 # Changes
 - No longer 1 control script, each exchange independantly pushes raw data to DB
 - All raw data form exchanges are permiated in DB so we can always recover or repair
