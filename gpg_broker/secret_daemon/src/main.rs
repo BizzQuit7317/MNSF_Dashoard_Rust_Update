@@ -62,29 +62,8 @@ fn main() {
                             None => println!("[ERR]No SKESK sent!"),
                         }
 
-                        //match skesk.decrypt(derived_key.as_ref()) {
-                        //    Ok(sk) => {
-                        //        println!("sk -> {:?}", sk);
-                        //    }
-                        //    Err(e) => println!("[ERR]Could not decrypt packet! {:?}", e),
-                        //}
                     }
                     Packet::SymEncryptedProtectedData(sepd) => {
-                        //println!("Session key -> {:?}\ndata to decrypt -> {:?}, packet -> {:?}", session_key, std::any::type_name_of_val(&sepd), sepd.data());
-                        //let data_bytes = sepd.decrypt(&session_key, Some(sym_algo));
-                        //let data_plain_text = String::from_utf8(data_bytes.unwrap()).expect("[ERR]Invalid UTF-8! ");
-                        //println!("data bytess -> {:?}", data_bytes);
-
-                        //let mut inner_parsser = PacketParser::new(&data_bytes[..]);
-
-                        //while let Some(inner_val) = inner_parsser.next() {
-                        //    match inner_val {
-                        //        Ok(inner_packet) => {
-                        //            println!("inner_packet -> {:?}", inner_packet);
-                        //        }
-                        //        Err(e) => println!("[ERR]No inner packet! {:?}", e),
-                        //    }
-                        //}a
 
                         match sepd.decrypt(&session_key, Some(sym_algo)) {
                             Ok(data_bytes) => {
@@ -111,12 +90,6 @@ fn main() {
                                                     }
                                                 },
                                                 Packet::CompressedData(mut comp_data) => {
-                                                    /*
-                                                    let decompressed_data = comp_data.decompress();
-                                                    println!("Decompressed data -> {:?}", decompressed_data);
-                                                    decompressed_data.fill_buf();
-                                                    println!("Decompressed data filled buffer -> {:?}", decompressed_data);
-                                                    */
 
                                                     match comp_data.decompress() {
                                                         Ok(mut decomp_data) => {
