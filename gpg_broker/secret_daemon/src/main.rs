@@ -2,11 +2,7 @@ use rpassword;
 use secrecy::{SecretString, ExposeSecret};
 use std::fs::File;
 use pgp::packet::{PacketParser, Packet};
-use pgp::errors::Error;
 use std::io::BufReader;
-use pgp::crypto;
-use pgp::types::StringToKey;
-use rand::rngs::OsRng;
 use std::io::Read;
 
 fn main() {
@@ -19,39 +15,25 @@ fn main() {
 
     let mut parser = PacketParser::new(buffer);
 
-    //let mut session_key: &[u8] = &[];
     let mut session_key: Vec<u8> = Vec::new();
-    let mut sym_algo = pgp::crypto::sym::SymmetricKeyAlgorithm::AES256;
-    //let iterator = parser.next();
+    let sym_algo = pgp::crypto::sym::SymmetricKeyAlgorithm::AES256;
 
-    //while let Some(ref val) = iterator {
     while let Some(ref val) = parser.next() {
         match val {
             Ok(packet) => {
-                //println!("Packet -> {:?}", packet);
                 match packet {
                     Packet::SymKeyEncryptedSessionKey(skesk) => {
-                        //println!("raw key -> {:?}", &password.expose_secret().as_bytes());
-                        //println!("skesk -> {:?}", skesk);
-
-                        //let cunt = StringToKey::new_iterated();
-
                         let s2k = &skesk.s2k();
-                        let algo = skesk.sym_algorithm();
-                        let key_size = 32;
+                        let key_size = 32; //from documentation specifying the byte rangefrom documentation specifying the byte range
 
                         let derived_key = s2k.unwrap().derive_key(&password.expose_secret().as_bytes(), key_size).expect("[ERR]Failied to derive key! ");
                         session_key = derived_key.as_ref().to_vec();
-                        //println!("s2k -> {:?}\nderived key -> {:?}\nderived key bytes -> {:?}\nalgo -> {:?}\nkey size -> {:?}", s2k, derived_key, derived_key.as_ref(), algo, key_size);
-
-                        //match skesk.decrypt(&password.expose_secret().as_bytes()) {
-                        //println!("session key field -> {:?}", skesk.encrypted_key());
 
                         match skesk.encrypted_key() {
                             Some(bytes) if bytes.is_empty() => {
                                 println!("No bytes here apparently");
                             }
-                            Some(bytes) => {
+                            Some(_bytes) => {
                                 match skesk.decrypt(derived_key.as_ref()) {
                                     Ok(sk) => {
                                         println!("sk -> {:?}", sk);
@@ -64,11 +46,8 @@ fn main() {
 
                     }
                     Packet::SymEncryptedProtectedData(sepd) => {
-
                         match sepd.decrypt(&session_key, Some(sym_algo)) {
                             Ok(data_bytes) => {
-
-                                println!("[DBG] Successfully decrypted bulk data, now parsing inner packets...");
 
                                 let mut inner_parser = PacketParser::new(&data_bytes[..]);
 
@@ -77,7 +56,6 @@ fn main() {
                                         Ok(inner_packet) => {
                                             match inner_packet {
                                                 Packet::LiteralData(literal_data) => {
-                                                    println!("\n--- 🎉 FOUND PLAIN TEXT DATA (LiteralData) 🎉 ---");
                                                     let plaintext_bytes = literal_data.data();
 
                                                     match String::from_utf8(plaintext_bytes.to_vec()) {
@@ -89,19 +67,13 @@ fn main() {
                                                         }
                                                     }
                                                 },
-                                                Packet::CompressedData(mut comp_data) => {
-
+                                                Packet::CompressedData(comp_data) => {
                                                     match comp_data.decompress() {
                                                         Ok(mut decomp_data) => {
-                                                            println!("data decompressed");
-                                                            println!("data -> {:?}", decomp_data);
-
                                                             let mut decompressed_bytes = Vec::new();
 
                                                             match decomp_data.read_to_end(&mut decompressed_bytes) {
                                                                 Ok(_) => {
-                                                                    println!("Decoompression sucessfull -> {:?}", decompressed_bytes);
-
                                                                     let mut deepest_parser = PacketParser::new(&decompressed_bytes[..]);
 
                                                                     while let Some(deep_val) = deepest_parser.next() {
