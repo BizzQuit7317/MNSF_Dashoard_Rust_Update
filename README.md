@@ -9,6 +9,7 @@ Same as the MNSF_Dashboard repo but backend code updated in rust and updated app
 sudo apt update
 sudo apt install -y pkg-config libgpgme-dev libgpg-error-dev libassuan-dev
 ```
+- See dir UDS_Test to see the breakdown of how the unix domain socket will work for the gpg broker
 
 # Key security
 - gpg encrypted keys in json files
