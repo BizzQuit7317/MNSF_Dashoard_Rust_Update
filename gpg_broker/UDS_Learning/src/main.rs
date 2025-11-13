@@ -20,7 +20,7 @@ async fn main() -> Result<()> {
 
     loop {
         let (stream, _addr) = listener.accept().await.expect("[ERR]Failed to pickup client!!! ");
-        println!("[DBG]Client connected!!! ");
+        println!("[DBG]Client connected!!! "); //Do something more than just send a connected message and close
         drop(stream)
     }
 
