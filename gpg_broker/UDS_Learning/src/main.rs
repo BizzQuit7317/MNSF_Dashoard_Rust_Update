@@ -8,5 +8,15 @@ use anyhow::Result;
 async fn main() -> Result<()> {
     let socket_path = "/tmp/uds_learning.sock"; //This file will be created whenthe script is run
 
+    if Path::new(socket_path).exists() {
+        fs::remove_file(socket_path).expect("[ERR]Could not remove file!!! "); //Mkae sure the file doesnt already exist
+    }
 
+    let listener = UnixListener::bind(socket_path).expect("[ERR]Failed to bind to socket!!! ");
+
+    fs::set_permissions(socket_path, fs::permission::from_mode(0o700)).expect("[ERR]Failed to set the file permissions!!! ");
+
+    println!("Server listening on {}", socket_path);
+
+    Ok(())
 }
