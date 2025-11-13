@@ -18,5 +18,11 @@ async fn main() -> Result<()> {
 
     println!("Server listening on {}", socket_path);
 
+    loop {
+        let (stream, _addr) = listener.accept().await.expect("[ERR]Failed to pickup client!!! ");
+        println!("[DBG]Client connected!!! ");
+        drop(stream)
+    }
+
     Ok(())
 }
