@@ -63,11 +63,10 @@ gpg --output <key>.json --decrypt <key>.json.gpg
 - Everything should be modular, easier to update individual exchange or add new ones, also remvoves risk of 1 error creating a chain effect and breaking the entire app
 
 # To Do
-- Update exchange scripts into rust - Done
-- Connect exchanges to mongoDB and start streaming data - Pending
-- Update calcuulation and alert scripts - Pending
-- Update PHP to display data - Pending
-- Update server to run update - Pending
+- Update token between sender andd client to be proper tokens instead of strings
+- Deserialise decrypted keys from sender_client
+- Make sender_client a structure so it can be used by the exchange scripts
+- Connect each exchange script to the sender structure to read the keys withut having to see them in plain text
 
 # Data Flow
 - Read from exchange, saving raw calls to DB
