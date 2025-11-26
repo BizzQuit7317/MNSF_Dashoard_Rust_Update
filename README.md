@@ -25,11 +25,13 @@ sudo apt install -y pkg-config libgpgme-dev libgpg-error-dev libassuan-dev
 - this way we only need to enter the secret passphrase, which not stored on the server to start the application
 
 # How the secret daemon works
-- when started hould prompt user for key
-- shouuld decrypt gpg and keep data in memory
-- create unix domain socket and listener
-- when listener socket gets a reqest first authenticate caller, if auth true return keys
-- continue to loop on socket
+- There are 3 structures
+- The decryptor struct to read the keys
+- The server which is the daemon and liten on the uni socket
+- The client which goes in each exchange call to interact with the socket
+- the socket is given a pasword by the user when it start up, this password is used by the decryptor to decrypt the keys
+- the client also has a unique token to authenticate with the socket so it doesnt just give keys to any client
+- the client then sendds the keys into the exchnage request
 
 # Setting up keys
 - Create the plain text json file in this format
