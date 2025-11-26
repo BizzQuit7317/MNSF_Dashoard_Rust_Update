@@ -4,10 +4,17 @@ use std::fs::File;
 use pgp::packet::{PacketParser, Packet};
 use std::io::BufReader;
 use std::io::Read;
+use std::env;
 
 fn main() {
-    println!("Enter passkey: ");
-    let password = SecretString::new(rpassword::read_password().unwrap().into());
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() < 2 {
+        eprintln!("Error: Password argument missing.");
+        std::process::exit(1); // Exit with a non-zero code to signal failure
+    }
+
+    let password = SecretString::new(args[1].clone().into());//SecretString::new(rpassword::read_password().unwrap().into());
 
     let gpg_file = File::open("/home/ubuntu/rust_tests/gpg_broker/binkey.json.gpg").expect("[ERR]GPG file not found! ");
 
