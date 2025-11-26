@@ -38,7 +38,7 @@ fn main() {
 
                         match skesk.encrypted_key() {
                             Some(bytes) if bytes.is_empty() => {
-                                println!("No bytes here apparently");
+                                //println!("No bytes here apparently");
                             }
                             Some(_bytes) => {
                                 match skesk.decrypt(derived_key.as_ref()) {
