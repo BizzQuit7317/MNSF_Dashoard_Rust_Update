@@ -9,6 +9,8 @@ pub const AUTH_TOKEN: &str = "SUPER-DUPER-SECRET!!!!";
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    let mut AUTH_STATE: bool = false;
+
     let socket_path = "/tmp/uds_learning.sock"; //This file will be created whenthe script is run
 
     if Path::new(socket_path).exists() {
@@ -26,7 +28,7 @@ async fn main() -> Result<()> {
         //println!("[DBG]Client connected!!! ");
 
         tokio::spawn(async move {
-            handle_client(stream).await;
+            handle_client(stream, AUTH_STATE).await;
         });
 
         //drop(stream)
@@ -36,7 +38,7 @@ async fn main() -> Result<()> {
 }
 
 
-async fn handle_client(mut stream: UnixStream) {
+async fn handle_client(mut stream: UnixStream, mut auth_state: bool) {
     let mut buf = vec![0u8; 1024];
 
     loop {
@@ -47,13 +49,19 @@ async fn handle_client(mut stream: UnixStream) {
             }
             Ok(n) => {
                 let msg = String::from_utf8_lossy(&buf[..n]).trim().to_string();;
-                println!("[DBG] Received: {}", msg);
+                println!("[DBG] Received: {}\nauth state -> {}", msg, auth_state);
 
-                if msg  == AUTH_TOKEN {
+                if msg  == AUTH_TOKEN && auth_state == false{
                     stream.write_all(b"AUTH_OK").await.unwrap();
-                } else {
+                    auth_state = true;
+                } else if msg != AUTH_TOKEN && auth_state == true{
+                    stream.write_all(b"This is collected gpg data for the given exchange!!!").await.unwrap();
+                    auth_state = false;
+                } else  {
                     stream.write_all(b"AUTH_FAIL").await.unwrap();
                 }
+
+                println!("[DBG] Finished handling  current message above\n##############################################");
 
                 /*
                 // Send a response back to the client
