@@ -5,11 +5,17 @@ use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
 use anyhow::Result;
 use std::process::Command;
+use rpassword;
+use secrecy::{SecretString, ExposeSecret};
 
 pub const AUTH_TOKEN: &str = "SUPER-DUPER-SECRET!!!!";
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    println!("Enter passsword: ");
+
+    let PASSWORD = SecretString::new(rpassword::read_password().unwrap().into());
+
     let mut AUTH_STATE: bool = false;
 
     let socket_path = "/tmp/uds_learning.sock"; //This file will be created whenthe script is run
@@ -27,9 +33,9 @@ async fn main() -> Result<()> {
     loop {
         let (stream, _addr) = listener.accept().await.expect("[ERR]Failed to pickup client!!! ");
         //println!("[DBG]Client connected!!! ");
-
+        let value = PASSWORD.clone();
         tokio::spawn(async move {
-            handle_client(stream, AUTH_STATE).await;
+            handle_client(stream, AUTH_STATE, &value.expose_secret()).await;
         });
 
         //drop(stream)
@@ -39,7 +45,7 @@ async fn main() -> Result<()> {
 }
 
 
-async fn handle_client(mut stream: UnixStream, mut auth_state: bool) {
+async fn handle_client(mut stream: UnixStream, mut auth_state: bool, pass: &str) {
     let mut buf = vec![0u8; 1024];
 
     loop {
@@ -56,8 +62,7 @@ async fn handle_client(mut stream: UnixStream, mut auth_state: bool) {
                     stream.write_all(b"AUTH_OK").await.unwrap();
                     auth_state = true;
                 } else if msg != AUTH_TOKEN && auth_state == true{
-
-                    let output  = Command::new("/home/ubuntu/rust_tests/gpg_broker/secret_daemon/target/release/secret_daemon").output().expect("[ERR]Running decryptor! ");
+                    let output  = Command::new("/home/ubuntu/rust_tests/gpg_broker/secret_daemon/target/release/secret_daemon").arg(pass).output().expect("[ERR]Running decryptor! ");
                     let mut stdout_string = String::new();
                     if output.status.success() {
                         stdout_string = String::from_utf8_lossy(&output.stdout).to_string();
