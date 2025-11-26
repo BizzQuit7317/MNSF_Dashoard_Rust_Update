@@ -3,6 +3,8 @@ Same as the MNSF_Dashboard repo but backend code updated in rust and updated app
 
 # To Do
 - Update token between sender andd client to be proper tokens instead of strings
+- Need to setup a encrypted mongodb table to store user data (Ussername, Pasword  and Token)
+- write a function  to check each token against one from the db, it should load in the fully encrypted db when launched and every so often should check for new entries or other changes
 - Deserialise decrypted keys from sender_client
 - Make sender_client a structure so it can be used by the exchange scripts
 - Connect each exchange script to the sender structure to read the keys withut having to see them in plain text
