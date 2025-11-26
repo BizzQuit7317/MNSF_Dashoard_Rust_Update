@@ -4,6 +4,7 @@ use std::fs;
 use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
 use anyhow::Result;
+use std::process::Command;
 
 pub const AUTH_TOKEN: &str = "SUPER-DUPER-SECRET!!!!";
 
@@ -55,7 +56,14 @@ async fn handle_client(mut stream: UnixStream, mut auth_state: bool) {
                     stream.write_all(b"AUTH_OK").await.unwrap();
                     auth_state = true;
                 } else if msg != AUTH_TOKEN && auth_state == true{
-                    stream.write_all(b"This is collected gpg data for the given exchange!!!").await.unwrap();
+
+                    let output  = Command::new("/home/ubuntu/rust_tests/gpg_broker/secret_daemon/target/release/secret_daemon").output().expect("[ERR]Running decryptor! ");
+                    let mut stdout_string = String::new();
+                    if output.status.success() {
+                        stdout_string = String::from_utf8_lossy(&output.stdout).to_string();
+                        println!("output ->  {}", stdout_string);
+                    }
+                    stream.write_all(stdout_string.as_bytes()).await.unwrap();
                     auth_state = false;
                 } else  {
                     stream.write_all(b"AUTH_FAIL").await.unwrap();
