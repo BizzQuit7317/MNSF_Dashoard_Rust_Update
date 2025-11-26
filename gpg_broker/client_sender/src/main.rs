@@ -2,6 +2,7 @@ use tokio::net::UnixStream;
 use tokio::io::{AsyncWriteExt, AsyncReadExt};
 
 pub const AUTH_TOKEN: &str = "SUPER-DUPER-SECRET!!!!";
+pub const TMP_EXCHANGE_ID: &str = "binance";
 
 #[tokio::main]
 async  fn main() {
@@ -22,4 +23,13 @@ async  fn main() {
     }
 
     println!("Authenticated with server!");
+
+    stream.write_all(TMP_EXCHANGE_ID.as_bytes()).await.unwrap();
+    stream.write_all(b"\n").await.unwrap(); //delimiter
+
+    let mut buf = vec![0u8; 1024];
+    let n = stream.read(&mut buf).await.unwrap();
+    let reply = String::from_utf8_lossy(&buf[..n]);
+
+    println!("Server sent back: {}", reply);
 }
