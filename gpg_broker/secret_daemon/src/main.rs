@@ -67,7 +67,7 @@ fn main() {
 
                                                     match String::from_utf8(plaintext_bytes.to_vec()) {
                                                         Ok(plaintext) => {
-                                                            println!("Plain Text:\n{}", plaintext);
+                                                            println!("{}", plaintext);
                                                         }
                                                         Err(_) => {
                                                             println!("[ERR]Data is not valid UTF-8. Raw bytes: {:?}", plaintext_bytes);
