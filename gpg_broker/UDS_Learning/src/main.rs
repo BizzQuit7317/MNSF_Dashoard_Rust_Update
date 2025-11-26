@@ -1,8 +1,11 @@
+use tokio::net::{UnixListener, UnixStream};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use std::fs;
 use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
 use anyhow::Result;
+
+pub const AUTH_TOKEN: &str = "SUPER-DUPER-SECRET!!!!";
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -43,15 +46,24 @@ async fn handle_client(mut stream: UnixStream) {
                 return;
             }
             Ok(n) => {
-                let msg = String::from_utf8_lossy(&buf[..n]);
+                let msg = String::from_utf8_lossy(&buf[..n]).trim().to_string();;
                 println!("[DBG] Received: {}", msg);
 
+                if msg  == AUTH_TOKEN {
+                    stream.write_all(b"AUTH_OK").await.unwrap();
+                } else {
+                    stream.write_all(b"AUTH_FAIL").await.unwrap();
+                }
+
+                /*
                 // Send a response back to the client
-                let reply = format!("Server got: {}", msg);
+                let reply = format!("AUTH_OK");
                 if let Err(e) = stream.write_all(reply.as_bytes()).await {
                     eprintln!("[ERR] Failed to send response: {}", e);
                     return;
                 }
+                */
+
             }
             Err(e) => {
                 eprintln!("[ERR] Reading client! {}", e);
