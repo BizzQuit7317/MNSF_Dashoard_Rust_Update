@@ -1,6 +1,12 @@
 # MNSF_Dashoard_Rust_Update
 Same as the MNSF_Dashboard repo but backend code updated in rust and updated app structure
 
+# To Do
+- Update token between sender andd client to be proper tokens instead of strings
+- Deserialise decrypted keys from sender_client
+- Make sender_client a structure so it can be used by the exchange scripts
+- Connect each exchange script to the sender structure to read the keys withut having to see them in plain text
+
 # Important
 - If compiling code on a smaller machine like a ec2 t2.micro use the safe_compile.sh script to add a 4gb swap and limit compilation to 1 crate at a time, this will massivly increase compile time but stop the server from crashing. Just **add the safe_compile.sh script to the same dir as the Cargo.toml** files and run it from there
 - Make sure to **run safely compiled scripts from /target/release/**
@@ -61,12 +67,6 @@ gpg --output <key>.json --decrypt <key>.json.gpg
 - No longer 1 control script, each exchange independantly pushes raw data to DB
 - All raw data form exchanges are permiated in DB so we can always recover or repair
 - Everything should be modular, easier to update individual exchange or add new ones, also remvoves risk of 1 error creating a chain effect and breaking the entire app
-
-# To Do
-- Update token between sender andd client to be proper tokens instead of strings
-- Deserialise decrypted keys from sender_client
-- Make sender_client a structure so it can be used by the exchange scripts
-- Connect each exchange script to the sender structure to read the keys withut having to see them in plain text
 
 # Data Flow
 - Read from exchange, saving raw calls to DB
