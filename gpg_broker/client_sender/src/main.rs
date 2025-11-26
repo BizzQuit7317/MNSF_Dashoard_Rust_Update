@@ -34,6 +34,8 @@ async  fn main() {
     let n = stream.read(&mut buf).await.unwrap();
     let reply = String::from_utf8_lossy(&buf[..n]);
 
+    println!("{}", reply);
+
     match serde_json::from_str::<structs::raw_data>(&reply) {
         Ok(data) => {
             println!("{:?}", data);
