@@ -1,5 +1,8 @@
+mod structs;
+
 use tokio::net::UnixStream;
 use tokio::io::{AsyncWriteExt, AsyncReadExt};
+use serde_json;
 
 pub const AUTH_TOKEN: &str = "SUPER-DUPER-SECRET!!!!";
 pub const TMP_EXCHANGE_ID: &str = "binance";
@@ -31,5 +34,11 @@ async  fn main() {
     let n = stream.read(&mut buf).await.unwrap();
     let reply = String::from_utf8_lossy(&buf[..n]);
 
-    println!("Server sent back: {}", reply);
+    match serde_json::from_str(&replay) {
+        Ok(data) => {
+            println!("{}", data);
+        }
+        Err(e) => println!("[ERR]Deserialising string! {:?}", e),
+    }
+
 }
