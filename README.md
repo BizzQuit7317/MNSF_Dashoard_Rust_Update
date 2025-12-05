@@ -2,7 +2,6 @@
 Same as the MNSF_Dashboard repo but backend code updated in rust and updated app structure
 
 # To Do
-- Figure oout why the data from daemon_server into daemon_client isnt serialising  properly?
 - Test step 1  start the daemon_server. step 2 run the binance  exchange function and see if 1) the keys are being read through the daemon properly. 2) the binance raw  data is being pushed into a  db. The  important check here is  for stability nothing  should ever miss, if data isnt  available it needs to push buffer data
 - Update token between sender andd client to be proper tokens instead of strings
 - Need to setup a encrypted mongodb table to store user data (Ussername, Pasword  and Token)
