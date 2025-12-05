@@ -29,7 +29,6 @@ impl Client {
     }
 
     pub async fn collectData(&self) {
-        println!("[DBG]Starting collecting data!!!");
         let mut stream = UnixStream::connect(&self.SOCKET_PATH).await.expect("[ERR]Couldn't connect to the socket on path! ");
 
         stream.write_all(&self.AUTH_TOKEN.as_bytes()).await.unwrap();
@@ -44,8 +43,6 @@ impl Client {
             return;
         }
 
-        println!("Authenticated with server!");
-
         stream.write_all(&self.EXCHANGE_ID.as_bytes()).await.unwrap();
         stream.write_all(b"\n").await.unwrap(); //delimiter
 
@@ -53,7 +50,6 @@ impl Client {
         let n = stream.read(&mut buf).await.unwrap();
         let reply = String::from_utf8_lossy(&buf[..n]);
 
-        println!("{}", reply);
 
         match serde_json::from_str::<KeyData>(&reply) {
             Ok(data) => {
