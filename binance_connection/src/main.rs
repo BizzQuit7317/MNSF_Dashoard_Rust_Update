@@ -9,7 +9,9 @@ use serde_json::Value;
 
 #[tokio::main]
 async fn main() {
-    let mut Binance_Client = structs::BinanceClient::new(String::from(""), String::from(""));
+    let key_data = run_client().await;
+
+    let mut Binance_Client = structs::BinanceClient::new(key_data.key, key_data.secret);
     let mut MongoClient = ClientStruct::new("").await;
 
     /*
