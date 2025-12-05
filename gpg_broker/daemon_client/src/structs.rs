@@ -12,6 +12,18 @@ pub struct KeyData {
     pub account: String
 }
 
+impl Default for KeyData {
+    fn default() -> Self {
+        KeyData {
+            id: "".to_string(),
+            key: "".to_string(),
+            secret: "".to_string(),
+            pass: "".to_string(),
+            account: "".to_string(),
+        }
+    }
+}
+
 #[derive(Debug)]
 pub struct Client {
     pub AUTH_TOKEN: String,
@@ -28,7 +40,7 @@ impl Client {
         }
     }
 
-    pub async fn collectData(&self) {
+    pub async fn collectData(&self) ->  KeyData {
         let mut stream = UnixStream::connect(&self.SOCKET_PATH).await.expect("[ERR]Couldn't connect to the socket on path! ");
 
         stream.write_all(&self.AUTH_TOKEN.as_bytes()).await.unwrap();
@@ -40,7 +52,7 @@ impl Client {
 
         if reply.trim() != "AUTH_OK" {
             println!("Authentication failed: {}", reply);
-            return;
+            return KeyData::default();
         }
 
         stream.write_all(&self.EXCHANGE_ID.as_bytes()).await.unwrap();
@@ -50,12 +62,15 @@ impl Client {
         let n = stream.read(&mut buf).await.unwrap();
         let reply = String::from_utf8_lossy(&buf[..n]);
 
+        let mut key_data = KeyData::default();
 
         match serde_json::from_str::<KeyData>(&reply) {
             Ok(data) => {
-                println!("{:?}", data);
+                key_data = data;
             }
             Err(e) => println!("[ERR]Deserialising string! {:?}", e),
         }
+
+        key_data
     }
 }
