@@ -21,6 +21,7 @@ sudo apt install -y pkg-config libgpgme-dev libgpg-error-dev libassuan-dev
 - in gpg_broker, secret_daemon reads the keys and the UDS_Test is the server that calls the secret_daemon script (this is only for testing the final version is called daemon_server)
 
 # Key security
+- Make the secret_daemon script a library for the UDS_Test and rewrite it all in a single rust file called daemon_server
 - gpg encrypted keys in json files
 - each key pair gets its own encrypted json
 - write a secret daemon process (some script to work as an inbetween)
