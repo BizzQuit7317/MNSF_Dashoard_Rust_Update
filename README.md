@@ -2,9 +2,7 @@
 Same as the MNSF_Dashboard repo but backend code updated in rust and updated app structure
 
 # To Do
-- Deserialise decrypted keys from sender_client
-- Make sender_client a structure so it can be used by the exchange scripts
-- Connect each exchange script to the sender structure to read the keys withut having to see them in plain text
+- Test step 1  start the daemon_server. step 2 run the binance  exchange function and see if 1) the keys are being read through the daemon properly. 2) the binance raw  data is being pushed into a  db. The  important check here is  for stability nothing  should ever miss, if data isnt  available it needs to push buffer data
 - Update token between sender andd client to be proper tokens instead of strings
 - Need to setup a encrypted mongodb table to store user data (Ussername, Pasword  and Token)
 - write a function  to check each token against one from the db, it should load in the fully encrypted db when launched and every so often should check for new entries or other changes
@@ -19,6 +17,7 @@ sudo apt install -y pkg-config libgpgme-dev libgpg-error-dev libassuan-dev
 ```
 - See dir UDS_Test to see the breakdown of how the unix domain socket will work for the gpg broker
 - in gpg_broker, secret_daemon reads the keys and the UDS_Test is the server that calls the secret_daemon script (this is only for testing the final version is called daemon_server)
+- Binance is the testing exchange im using, I have connected the daemon_client to binance
 
 # Key security
 - Make the secret_daemon script a library for the UDS_Test and rewrite it all in a single rust file called daemon_server
