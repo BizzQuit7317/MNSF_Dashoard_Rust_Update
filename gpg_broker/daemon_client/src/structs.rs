@@ -62,11 +62,17 @@ impl Client {
         let n = stream.read(&mut buf).await.unwrap();
         let reply = String::from_utf8_lossy(&buf[..n]);
 
+
+        println!("[DBG] REPLAY -> {:?}", reply);
+
         let mut key_data = KeyData::default();
 
-        match serde_json::from_str::<KeyData>(&reply) {
-            Ok(data) => {
-                key_data = data;
+        match serde_json::from_str::<Vec<KeyData>>(&reply) {
+            Ok(mut data) => {
+                if !data.is_empty() {
+                    key_data = data.remove(0); // take the first element
+                }
+                //key_data = data;
             }
             Err(e) => println!("[ERR]Deserialising string! {:?}", e),
         }
