@@ -56,7 +56,7 @@ async fn handle_client(mut stream: UnixStream, mut auth_state: bool, pass: &str)
             }
             Ok(n) => {
                 let msg = String::from_utf8_lossy(&buf[..n]).trim().to_string();;
-                println!("[DBG] Received: {}\nauth state -> {}", msg, auth_state);
+                //println!("[DBG] Received: {}\nauth state -> {}", msg, auth_state);
 
                 if msg  == AUTH_TOKEN && auth_state == false{
                     stream.write_all(b"AUTH_OK").await.unwrap();
