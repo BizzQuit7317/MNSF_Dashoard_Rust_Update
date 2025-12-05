@@ -7,7 +7,6 @@ use std::io::Read;
 use std::env;
 
 fn main() {
-    /*
     let args: Vec<String> = env::args().collect();
 
     if args.len() < 2 {
@@ -16,11 +15,7 @@ fn main() {
     }
 
     let password = SecretString::new(args[1].clone().into());//SecretString::new(rpassword::read_password().unwrap().into());
-    */
-    println!("Enter passsword: ");
-
-    let password = SecretString::new(rpassword::read_password().unwrap().into());
-    
+        
     let gpg_file = File::open("/home/ubuntu/rust_tests/gpg_broker/binkey.json.gpg").expect("[ERR]GPG file not found! ");
 
     let buffer = BufReader::new(gpg_file);
