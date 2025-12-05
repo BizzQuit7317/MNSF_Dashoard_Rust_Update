@@ -66,7 +66,7 @@ async fn handle_client(mut stream: UnixStream, mut auth_state: bool, pass: &str)
                     let mut stdout_string = String::new();
                     if output.status.success() {
                         stdout_string = String::from_utf8_lossy(&output.stdout).to_string();
-                        println!("output ->  {}", stdout_string);
+                        //println!("output ->  {}", stdout_string);
                     }
                     stream.write_all(stdout_string.as_bytes()).await.unwrap();
                     auth_state = false;
