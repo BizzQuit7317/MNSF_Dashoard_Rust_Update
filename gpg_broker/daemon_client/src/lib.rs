@@ -5,7 +5,7 @@ use tokio::io::{AsyncWriteExt, AsyncReadExt};
 use serde_json;
 
 #[tokio::main]
-async fn main() {
+async fn run_client() {
     println!("[MAIN] starting!!!");
     let client = structs::Client::new("SUPER-DUPER-SECRET!!!!", "binance");
     println!("[MAIN] Client created");
