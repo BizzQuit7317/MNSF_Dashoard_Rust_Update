@@ -18,6 +18,7 @@ sudo apt update
 sudo apt install -y pkg-config libgpgme-dev libgpg-error-dev libassuan-dev
 ```
 - See dir UDS_Test to see the breakdown of how the unix domain socket will work for the gpg broker
+- in gpg_broker, secret_daemon reads the keys and the UDS_Test is the server that calls the secret_daemon script
 
 # Key security
 - gpg encrypted keys in json files
