@@ -63,7 +63,6 @@ impl Client {
         let reply = String::from_utf8_lossy(&buf[..n]);
 
 
-        println!("[DBG] REPLAY -> {:?}", reply);
 
         let mut key_data = KeyData::default();
 
