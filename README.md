@@ -3,9 +3,12 @@ Same as the MNSF_Dashboard repo but backend code updated in rust and updated app
 
 # To Do
 - Test step 1  start the daemon_server. step 2 run the binance  exchange function and see if 1) the keys are being read through the daemon properly. 2) the binance raw  data is being pushed into a  db. The  important check here is  for stability nothing  should ever miss, if data isnt  available it needs to push buffer data
+- Connect binance exchange script to cron or some other way to run it automatically
 - Update token between sender andd client to be proper tokens instead of strings
 - Need to setup a encrypted mongodb table to store user data (Ussername, Pasword  and Token)
-- write a function  to check each token against one from the db, it should load in the fully encrypted db when launched and every so often should check for new entries or other changes
+- Write a function  to check each token against one from the db, it should load in the fully encrypted db when launched and every so often should check for new entries or other changes
+- Move the rest of the exchange scripts onto the server and connect them to the daemon_client
+- Write script to read and compile raw db data from each exchange and puh formatted data to a new mongoDB
 
 # Important
 - If compiling code on a smaller machine like a ec2 t2.micro use the safe_compile.sh script to add a 4gb swap and limit compilation to 1 crate at a time, this will massivly increase compile time but stop the server from crashing. Just **add the safe_compile.sh script to the same dir as the Cargo.toml** files and run it from there
