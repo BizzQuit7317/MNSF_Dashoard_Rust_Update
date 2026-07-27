@@ -22,6 +22,11 @@ sudo apt install -y pkg-config libgpgme-dev libgpg-error-dev libassuan-dev
 - in gpg_broker, secret_daemon reads the keys and the UDS_Test is the server that calls the secret_daemon script (this is only for testing the final version is called daemon_server)
 - Binance is the testing exchange im using, I have connected the daemon_client to binance
 
+- If you need to transfer between th etest server and production server use this on the test server
+```
+scp <target file path> <user>@<IP>:<target file path>
+```
+
 # Key security
 - Make the secret_daemon script a library for the UDS_Test and rewrite it all in a single rust file called daemon_server
 - gpg encrypted keys in json files
