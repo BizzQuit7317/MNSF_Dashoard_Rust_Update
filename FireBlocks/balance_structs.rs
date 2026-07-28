@@ -1,10 +1,12 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 use chrono::DateTime;
 
+#[derive(Debug)]
 pub struct FullBalanceSnapshot {
     snapshots: Vec<BalanceSnapshot>
 }
 
+#[derive(Debug)]
 pub struct BalanceSnapshot {
     chain: String,
     asset: String,
