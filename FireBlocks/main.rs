@@ -99,14 +99,6 @@ async fn main() {
     //println!("{:?}", lpt_snapshot);
     all_assets.snapshots.push(lpt_snapshot);
 
-    let mut near_client = block_structs::near::structs::NearClient::new(String::from(""));
-    let _ = near_client.get_networks().await;
-    let near_response = near_client.get_total_balance().await;
-    //println!("near balance -> {:?}", near_response);
-    let near_snapshot = balance_struct::BalanceSnapshot::new("Near".to_string(), "NEAR".to_string(), near_response.to_string(), 24); //9 from documentatino on decimal places
-    //println!("{:?}", near_snapshot);
-    all_assets.snapshots.push(near_snapshot);
-
     let polkadot_keys = ["", "", "", "", "", ""];
     let mut counter = 1;
 
