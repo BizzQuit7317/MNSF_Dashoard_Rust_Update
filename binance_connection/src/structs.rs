@@ -7,8 +7,6 @@ use serde_json::{json, Value};
 use url::form_urlencoded;
 use std::collections::HashMap;
 use serde::Deserialize;
-use mongo_connect::ClientStruct;
-use mongodb::bson::{self, doc, Document};
 use chrono;
 
 pub struct BinanceClient {
@@ -70,32 +68,24 @@ impl BinanceClient {
 
         let response = request_builder.send().await?.json::<T>().await?;
 
-        Ok(response)       
+        Ok(response)
 
     }
 
-    pub async fn polling(&mut self, base_endpoint: &str, endpoint: &str, method: Method, body_data: Option<Value>, mongo_client:&mut  ClientStruct, table_name: &str) {
-        /*
-            Needs to call data and push it into a db
-        */
+    pub async fn get_data(&mut self) {
+        let future_wallet = self.send_request::<Value>("fapi", "/fapi/v2/balance", Method::GET, None).await;
+        let m_wallet = self.send_request::<Value>("dapi", "/dapi/v1/balance", Method::GET, None).await;
+        let spot_wallet = self.send_request::<Value>("api", "/sapi/v1/capital/config/getall", Method::GET, Some(json!({"type": "SPOT"}))).await;
+        let margin_wallet = self.send_request::<Value>("api", "/sapi/v1/margin/account", Method::GET, None).await;
+        let isolated_margin_wallet = self.send_request::<Value>("api", "/sapi/v1/margin/isolated/account", Method::GET, None).await;
+        let earn_statking_wallet = self.send_request::<Value>("api", "/sapi/v1/staking/position", Method::GET, None).await;
+        let earn_locked_wallet = self.send_request::<Value>("api", "/sapi/v1/simple-earn/flexible/position", Method::GET, None).await;
+        let maint_margin = self.send_request::<Value>("fapi", "/fapi/v2/account", Method::GET, None).await;
+        let futures_positions = self.send_request::<Value>("fapi", "/fapi/v2/positionRisk", Method::GET, None).await;
+        let m_positions = self.send_request::<Value>("dapi", "/dapi/v1/positionRisk", Method::GET, None).await;
 
-        let response = self.send_request::<Value>(base_endpoint, endpoint, method, body_data).await;
-        let response_data = mongo_client.value_to_documents(response.unwrap());
-
-        let _ = &mut  mongo_client.select_collection(table_name).await;
-        let _ = &mut  mongo_client.push_multi_document_collection(response_data).await;
-        
-
+        //for debugging
+        println!("#################################################\n{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n#################################################", future_wallet, m_wallet, spot_wallet, margin_wallet, isolated_margin_wallet, earn_statking_wallet, earn_locked_wallet, maint_margin, futures_positions, m_positions);
     }
 
 }
-
-
-
-
-
-
-
-
-
-
