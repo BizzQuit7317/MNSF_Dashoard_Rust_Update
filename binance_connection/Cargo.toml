@@ -1,12 +1,9 @@
 [package]
-name = "binance_connection"
+name = "Binance"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-mongo_connect = { path = "../mongo_connect" }
-daemon_client = { path = "/home/ubuntu/rust_tests/gpg_broker/daemon_client"  }
-mongodb = "3.2.4"
 reqwest = { version = "0.11", features = ["json"] }
 tokio = { version = "1.46.1", features = ["full"] }
 hmac = "0.12.1"
