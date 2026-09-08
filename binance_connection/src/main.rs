@@ -24,7 +24,7 @@ async fn main() {
         rpassword::prompt_password("Passphrase: ").expect("Could not read passphrase!")
     );
 
-    let ciphertext = BufReader::new(File::open(input_path).expect("Could not find file!"));
+    let ciphertext = BufReader::new(File::open(&input_path).expect("Could not find file!"));
 
     let decryptor = age::Decryptor::new_buffered(ciphertext).expect("Not a valid age file!");
 
@@ -41,6 +41,8 @@ async fn main() {
     let text_lines: Vec<&str> = text.split("\n").collect();
 
     let mut Binance_Client = structs::BinanceClient::new(text_lines[0].to_string(), text_lines[1].to_string()); //main
-    Binance_Client.get_data().await;
 
+    let account = input_path.strip_suffix(".txt.age").and_then(|s| s.rsplit_once('_')).map(|(_, name)| name);
+
+    Binance_Client.get_data(account.unwrap().to_string()).await;
 }
