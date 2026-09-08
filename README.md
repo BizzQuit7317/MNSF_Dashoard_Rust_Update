@@ -28,12 +28,8 @@ scp <target file path> <user>@<IP>:<target file path>
 ```
 
 # Key security
-- Make the secret_daemon script a library for the UDS_Test and rewrite it all in a single rust file called daemon_server
-- gpg encrypted keys in json files
-- each key pair gets its own encrypted json
-- write a secret daemon process (some script to work as an inbetween)
-- each exchange with interact with the secret daemon via Unix domain socket
-- this way we only need to enter the secret passphrase, which not stored on the server to start the application
+- keys will be stored per exchange
+- each key file will be encrypted with passphrase protected age 
 
 # How the secret daemon works
 - There are 3 structures
