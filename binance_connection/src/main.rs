@@ -6,22 +6,42 @@ use reqwest::Method;
 use serde_json::Value;
 use mongodb::{bson::{doc, Document}, Client, Database};
 
+use std::fs::File;
+use std::io::{self, BufReader, Read, Write};
+
+use age::secrecy::SecretString;
+
 #[tokio::main]
 async fn main() {
-    let mut Binance_Client = structs::BinanceClient::new("".to_string(), "".to_string()); //main
+    print!("KeyFile: ");
+    io::stdout().flush().expect("Could not flush stdout!");
+
+    let mut input_path_buffer = String::new();
+    io::stdin().read_line(&mut input_path_buffer).expect("Could not read line!");
+
+    let input_path = format!("{}.txt.age", input_path_buffer.trim());
+    let passphrase = SecretString::from(
+        rpassword::prompt_password("Passphrase: ").expect("Could not read passphrase!")
+    );
+
+    let ciphertext = BufReader::new(File::open(input_path).expect("Could not find file!"));
+
+    let decryptor = age::Decryptor::new_buffered(ciphertext).expect("Not a valid age file!");
+
+    let identity = age::scrypt::Identity::new(passphrase);
+    let mut reader = decryptor
+        .decrypt(std::iter::once(&identity as &dyn age::Identity))
+        .expect("Could not decrypt — wrong passphrase?");
+
+    let mut plaintext = Vec::new();
+    reader.read_to_end(&mut plaintext).expect("Could not read plaintext!");
+
+    // If it's text
+    let text = String::from_utf8(plaintext.clone()).expect("Not valid UTF-8!");
+    let text_lines: Vec<&str> = text.split("\n").collect();
+
+    let mut Binance_Client = structs::BinanceClient::new(text_lines[0].to_string(), text_lines[1].to_string()); //main
     Binance_Client.get_data().await;
-
-    let mut Binance_Client_sub = structs::BinanceClient::new("".to_string(), "".to_string()); //sub 1
-    Binance_Client_sub.get_data().await;
-
-    let mut Binance_Client_sub2 = structs::BinanceClient::new("".to_string(), "".to_string()); //sub 2
-    Binance_Client_sub2.get_data().await;
-
-    let mut Binance_Client_sub3 = structs::BinanceClient::new("".to_string(), "".to_string()); //sub 3
-    Binance_Client_sub3.get_data().await;
-
-    let mut Binance_Client_sub4 = structs::BinanceClient::new("".to_string(), "".to_string()); //sub 4
-    Binance_Client_sub4.get_data().await;
 
     //Push data into db
     let client = mongodb::Client::with_uri_str("mongodb://localhost:27017".to_string()).await.unwrap();
@@ -31,4 +51,5 @@ async fn main() {
     let test_doc = doc! { "test": "Success" };
     let insert_result = test_collection.insert_one(test_doc).await.unwrap();
     println!("Complete!");
+
 }
