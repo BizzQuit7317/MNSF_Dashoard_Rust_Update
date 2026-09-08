@@ -99,7 +99,7 @@ impl BinanceClient {
         //println!("Complete!")
     }
 
-    pub async fn get_data(&mut self) {
+    pub async fn get_data(&mut self, given_account: String) {
         //Collect data
         let future_wallet = self.send_request::<Value>("fapi", "/fapi/v2/balance", Method::GET, None).await;
         let m_wallet = self.send_request::<Value>("dapi", "/dapi/v1/balance", Method::GET, None).await;
@@ -114,7 +114,7 @@ impl BinanceClient {
 
         //Process data
         let db = "BINANCE_RAW_DATA";
-        let account = "MAIN".to_string(); //ONLY FFOR TESTING
+        let account = given_account;
 
 
         if let Ok(wallet) = future_wallet {
