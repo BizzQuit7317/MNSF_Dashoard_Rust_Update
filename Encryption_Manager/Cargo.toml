@@ -1,0 +1,8 @@
+[package]
+name = "Encryption_Manager"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+age = "0.12.1"
+rpassword = "7"
