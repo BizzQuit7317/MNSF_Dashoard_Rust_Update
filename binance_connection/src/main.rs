@@ -43,13 +43,4 @@ async fn main() {
     let mut Binance_Client = structs::BinanceClient::new(text_lines[0].to_string(), text_lines[1].to_string()); //main
     Binance_Client.get_data().await;
 
-    //Push data into db
-    let client = mongodb::Client::with_uri_str("mongodb://localhost:27017".to_string()).await.unwrap();
-    let db = client.database("TEST_ENV");
-    let test_collection: mongodb::Collection<Document> = db.collection("test_docs_binance");
-
-    let test_doc = doc! { "test": "Success" };
-    let insert_result = test_collection.insert_one(test_doc).await.unwrap();
-    println!("Complete!");
-
 }
