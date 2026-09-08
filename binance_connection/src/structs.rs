@@ -81,7 +81,7 @@ impl BinanceClient {
 
     }
 
-    pub async fn push_to_db(&self, account: String, wallet: String, data: Value) {
+    pub async fn push_to_db(&self, account: String, wallet: String, data: Value, database: &str, collection: &str) {
         let snapshot = Snapshot {
             fetched_at: DateTime::now(),
             account: account,
@@ -90,19 +90,18 @@ impl BinanceClient {
         };
         //println!("{:?}", snapshot);
         let client = mongodb::Client::with_uri_str("mongodb://localhost:27017".to_string()).await.unwrap();
-        let db = client.database("TEST_ENV");
-        let test_collection: mongodb::Collection<Document> = db.collection("test_docs_binance");
+        let db = client.database(database);
+        let test_collection: mongodb::Collection<Document> = db.collection(collection);
 
         //let test_doc = doc! { "test": "Success" };
         let doc = mongodb::bson::to_document(&snapshot).unwrap();
         let insert_result = test_collection.insert_one(doc).await.unwrap();
-        println!("Complete!")
+        //println!("Complete!")
     }
 
     pub async fn get_data(&mut self) {
         //Collect data
         let future_wallet = self.send_request::<Value>("fapi", "/fapi/v2/balance", Method::GET, None).await;
-        /*
         let m_wallet = self.send_request::<Value>("dapi", "/dapi/v1/balance", Method::GET, None).await;
         let spot_wallet = self.send_request::<Value>("api", "/sapi/v1/capital/config/getall", Method::GET, Some(json!({"type": "SPOT"}))).await;
         let margin_wallet = self.send_request::<Value>("api", "/sapi/v1/margin/account", Method::GET, None).await;
@@ -112,16 +111,42 @@ impl BinanceClient {
         let maint_margin = self.send_request::<Value>("fapi", "/fapi/v2/account", Method::GET, None).await;
         let futures_positions = self.send_request::<Value>("fapi", "/fapi/v2/positionRisk", Method::GET, None).await;
         let m_positions = self.send_request::<Value>("dapi", "/dapi/v1/positionRisk", Method::GET, None).await;
-        */
-        //Process data
-        if let Ok(wallet) = future_wallet {
-            self.push_to_db("Main".to_string(), "Future".to_string(), wallet).await;
-        }
 
-        //for debugging
-        //self.push_to_db().await;
-        //println!("{:?}", future_wallet);
-        //println!("#################################################\n{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n#################################################", future_wallet, m_wallet, spot_wallet, margin_wallet, isolated_margin_wallet, earn_statking_wallet, earn_locked_wallet, maint_margin, futures_positions, m_positions);
+        //Process data
+        let db = "BINANCE_RAW_DATA";
+        let account = "MAIN".to_string(); //ONLY FFOR TESTING
+
+
+        if let Ok(wallet) = future_wallet {
+            self.push_to_db(account.clone(), "Future".to_string(), wallet, db, "FUTURE_WALLET").await;
+        }
+        if let Ok(wallet) = m_wallet {
+            self.push_to_db(account.clone(), "M".to_string(), wallet, db, "M_WALLET").await;
+        }
+        if let Ok(wallet) = spot_wallet {
+            self.push_to_db(account.clone(), "Spot".to_string(), wallet, db, "SPOT_WALLET").await;
+        }
+        if let Ok(wallet) = margin_wallet {
+            self.push_to_db(account.clone(), "Margin".to_string(), wallet, db, "MARGIN_WALLET").await;
+        }
+        if let Ok(wallet) = isolated_margin_wallet {
+            self.push_to_db(account.clone(), "Isolated Margin".to_string(), wallet, db, "ISOLATED_MARGIN_WALLET").await;
+        }
+        if let Ok(wallet) = earn_statking_wallet {
+            self.push_to_db(account.clone(), "Staking".to_string(), wallet, db, "STAKING_WALLET").await;
+        }
+        if let Ok(wallet) = earn_locked_wallet {
+            self.push_to_db(account.clone(), "Locked".to_string(), wallet, db, "LOCKED_WALLET").await;
+        }
+        if let Ok(wallet) = maint_margin {
+            self.push_to_db(account.clone(), "Maint Margin".to_string(), wallet, db, "MAINT_MMARGIN").await;
+        }
+        if let Ok(wallet) = futures_positions {
+            self.push_to_db(account.clone(), "Future Positions".to_string(), wallet, db, "FUTURE_POSITIONS").await;
+        }
+        if let Ok(wallet) = m_positions {
+            self.push_to_db(account.clone(), "M Positions".to_string(), wallet, db, "M_POSITIONS").await;
+        }
     }
 
 }
